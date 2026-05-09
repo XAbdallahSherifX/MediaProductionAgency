@@ -260,3 +260,9 @@ GitHub: [@OmarMustafaDev](https://github.com/OmarMustafaDev)
 Computer Science Student — Cairo University
 <br/>
 GitHub: [@Mo7amedA7medArafat](https://github.com/Mo7amedA7medArafat)
+
+**Abdallah Sherif Sayed**
+<br/>
+Computer Science Student — Cairo University
+<br/>
+GitHub: [@AbdallahSherifSayed](https://github.com/XAbdallahSherifX)
