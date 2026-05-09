@@ -250,9 +250,13 @@ WHERE s.Project_ID = 'your-project-id';
 
 ## Author
 **Omar Mustafa**
+<br/>
 Computer Science Student — Cairo University
+<br/>
 GitHub: [@OmarMustafaDev](https://github.com/OmarMustafaDev)
 
 **Mohamed Ahmed Arafat**
+<br/>
 Computer Science Student — Cairo University
+<br/>
 GitHub: [@Mo7amedA7medArafat](https://github.com/Mo7amedA7medArafat)
