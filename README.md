@@ -266,3 +266,9 @@ GitHub: [@Mo7amedA7medArafat](https://github.com/Mo7amedA7medArafat)
 Computer Science Student — Cairo University
 <br/>
 GitHub: [@AbdallahSherifSayed](https://github.com/XAbdallahSherifX)
+
+**Amr Tamer Abdellatif**
+<br/>
+Computer Science Student — Cairo University
+<br/>
+GitHub: [@AmrTamer](https://github.com/AmrTamer117)
