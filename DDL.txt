@@ -1,0 +1,81 @@
+
+CREATE TABLE Project (
+    Project_ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Creative_title VARCHAR(255),
+    deadline DATE,
+    budget FLOAT
+);
+
+CREATE TABLE Studio (
+    Studio_ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Studio_name VARCHAR(255),
+    availability_status VARCHAR(100),
+    wing VARCHAR(100)
+);
+
+CREATE TABLE TechSkill (
+    SkillID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Skillname VARCHAR(255)
+);
+
+CREATE TABLE Equipment (
+    Eq_ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Eq_name VARCHAR(255),
+    Serial_no VARCHAR(100),
+    Eq_Type VARCHAR(100),
+    Condition_status VARCHAR(100)
+);
+
+
+
+CREATE TABLE Session (
+    Session_ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Session_date DATE,
+    Session_start_time TIME,
+    Session_end_time TIME,
+    Project_ID UNIQUEIDENTIFIER,
+    Studio_ID UNIQUEIDENTIFIER,
+    FOREIGN KEY (Project_ID) REFERENCES Project(Project_ID) 
+        ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (Studio_ID) REFERENCES Studio(Studio_ID) 
+        ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE Professionals (
+    prof_ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    role_title VARCHAR(100),
+    fname VARCHAR(100),
+    lname VARCHAR(100),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+    SkillID UNIQUEIDENTIFIER,
+    FOREIGN KEY (SkillID) REFERENCES TechSkill(SkillID) 
+        ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+
+
+CREATE TABLE Session_Professionals (
+    Session_ID UNIQUEIDENTIFIER,
+    prof_ID UNIQUEIDENTIFIER,
+    contribution_val VARCHAR(255),
+    PRIMARY KEY (Session_ID, prof_ID),
+    FOREIGN KEY (Session_ID) REFERENCES Session(Session_ID) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (prof_ID) REFERENCES Professionals(prof_ID) 
+        ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Session_Equipment (
+    Session_ID UNIQUEIDENTIFIER,
+    Eq_ID UNIQUEIDENTIFIER,
+    prof_ID UNIQUEIDENTIFIER,
+    return_cond VARCHAR(255),
+    PRIMARY KEY (Session_ID, Eq_ID),
+    FOREIGN KEY (Session_ID) REFERENCES Session(Session_ID) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (Eq_ID) REFERENCES Equipment(Eq_ID) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (prof_ID) REFERENCES Professionals(prof_ID) 
+        ON UPDATE CASCADE ON DELETE SET NULL
+);

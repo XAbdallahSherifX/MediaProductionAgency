@@ -1,0 +1,1757 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FrameOps — Production Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #090c10;
+        --surface: #0f1318;
+        --surface2: #161c24;
+        --border: #1e2733;
+        --accent: #e8ff47;
+        --accent2: #ff6b35;
+        --accent3: #4fc3f7;
+        --text: #e8edf2;
+        --muted: #5a6878;
+        --danger: #ff4d6d;
+        --success: #3ddc97;
+        --warning: #ffd166;
+        --font-head: "Syne", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 10px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-mono);
+        min-height: 100vh;
+        display: flex;
+        overflow-x: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: 220px;
+        min-height: 100vh;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+      }
+      .sidebar-logo {
+        padding: 24px 20px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-logo .brand {
+        font-family: var(--font-head);
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--accent);
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+      .sidebar-logo .tagline {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 4px;
+      }
+      .nav {
+        flex: 1;
+        padding: 16px 0;
+        overflow-y: auto;
+      }
+      .nav-section {
+        padding: 8px 16px 4px;
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 20px;
+        cursor: pointer;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted);
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+        user-select: none;
+      }
+      .nav-item:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .nav-item.active {
+        color: var(--accent);
+        background: rgba(232, 255, 71, 0.06);
+        border-left-color: var(--accent);
+      }
+      .nav-item .icon {
+        font-size: 15px;
+        width: 18px;
+        text-align: center;
+      }
+      .nav-item .badge {
+        margin-left: auto;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: 220px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        height: 58px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
+      .topbar-title {
+        font-family: var(--font-head);
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .topbar-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-left: 2px;
+      }
+      .topbar-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: var(--radius);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+        text-transform: none;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #0a0c0f;
+        font-weight: 500;
+      }
+      .btn-primary:hover {
+        background: #d4eb30;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border-color: var(--border);
+      }
+      .btn-ghost:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .btn-danger {
+        background: rgba(255, 77, 109, 0.12);
+        color: var(--danger);
+        border-color: rgba(255, 77, 109, 0.25);
+      }
+      .btn-danger:hover {
+        background: rgba(255, 77, 109, 0.22);
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      /* ── PAGE ── */
+      .page {
+        display: none;
+        padding: 28px;
+        flex: 1;
+      }
+      .page.active {
+        display: block;
+      }
+
+      /* ── OVERVIEW ── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+      }
+      .stat-card.c1::before {
+        background: var(--accent);
+      }
+      .stat-card.c2::before {
+        background: var(--accent2);
+      }
+      .stat-card.c3::before {
+        background: var(--accent3);
+      }
+      .stat-card.c4::before {
+        background: var(--success);
+      }
+      .stat-card.c5::before {
+        background: var(--warning);
+      }
+      .stat-card.c6::before {
+        background: #a78bfa;
+      }
+      .stat-label {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .stat-value {
+        font-family: var(--font-head);
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat-card.c1 .stat-value {
+        color: var(--accent);
+      }
+      .stat-card.c2 .stat-value {
+        color: var(--accent2);
+      }
+      .stat-card.c3 .stat-value {
+        color: var(--accent3);
+      }
+      .stat-card.c4 .stat-value {
+        color: var(--success);
+      }
+      .stat-card.c5 .stat-value {
+        color: var(--warning);
+      }
+      .stat-card.c6 .stat-value {
+        color: #a78bfa;
+      }
+
+      /* ── TABLE ── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        gap: 12px;
+      }
+      .section-title {
+        font-family: var(--font-head);
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 6px 12px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text);
+        min-width: 180px;
+      }
+      .search-box input {
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        width: 100%;
+      }
+      .search-box input::placeholder {
+        color: var(--muted);
+      }
+      .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead tr {
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        padding: 10px 14px;
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.1s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      td {
+        padding: 10px 14px;
+        font-size: 12px;
+        vertical-align: middle;
+      }
+      .id-badge {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 7px;
+        font-size: 10px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+      }
+      .pill {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 500;
+      }
+      .pill-green {
+        background: rgba(61, 220, 151, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(61, 220, 151, 0.25);
+      }
+      .pill-red {
+        background: rgba(255, 77, 109, 0.12);
+        color: var(--danger);
+        border: 1px solid rgba(255, 77, 109, 0.25);
+      }
+      .pill-yellow {
+        background: rgba(255, 209, 102, 0.12);
+        color: var(--warning);
+        border: 1px solid rgba(255, 209, 102, 0.25);
+      }
+      .pill-blue {
+        background: rgba(79, 195, 247, 0.12);
+        color: var(--accent3);
+        border: 1px solid rgba(79, 195, 247, 0.25);
+      }
+      .pill-purple {
+        background: rgba(167, 139, 250, 0.12);
+        color: #a78bfa;
+        border: 1px solid rgba(167, 139, 250, 0.25);
+      }
+      .pill-accent {
+        background: rgba(232, 255, 71, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(232, 255, 71, 0.25);
+      }
+      .row-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .empty-state .em-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+      }
+
+      /* ── MODAL ── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 28px;
+        width: 480px;
+        max-width: 96vw;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.22s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+      }
+      .modal-title {
+        font-family: var(--font-head);
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        transition: color 0.15s;
+      }
+      .modal-close:hover {
+        color: var(--text);
+      }
+      .form-grid {
+        display: grid;
+        gap: 14px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .field label {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 9px 12px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--accent);
+      }
+      .field select option {
+        background: var(--surface);
+      }
+      .modal-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 22px;
+      }
+
+      /* ── TOAST ── */
+      .toast-container {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .toast {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        font-size: 12px;
+        min-width: 220px;
+        max-width: 320px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: toastIn 0.2s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      @keyframes toastIn {
+        from {
+          transform: translateX(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .toast.success {
+        border-color: rgba(61, 220, 151, 0.3);
+      }
+      .toast.error {
+        border-color: rgba(255, 77, 109, 0.3);
+      }
+      .toast-icon {
+        font-size: 16px;
+      }
+      .toast.success .toast-icon {
+        color: var(--success);
+      }
+      .toast.error .toast-icon {
+        color: var(--danger);
+      }
+
+      /* ── LOADING ── */
+      .loading-spinner {
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 40px auto;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .api-url-bar {
+        font-size: 10px;
+        color: var(--muted);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+      .api-url-bar input {
+        background: none;
+        border: none;
+        outline: none;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent3);
+        flex: 1;
+      }
+      .api-url-bar label {
+        font-size: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .page-desc {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 20px;
+        line-height: 1.6;
+        max-width: 600px;
+      }
+
+      /* Overview recent list */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 20px;
+      }
+      @media (max-width: 900px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      .mini-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+      }
+      .mini-list-item:last-child {
+        border-bottom: none;
+      }
+      .mini-list-item .name {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .mini-list-item .meta {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      /* Assign panels */
+      .assign-section {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+      .assign-section-title {
+        font-family: var(--font-head);
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--accent3);
+      }
+
+      .confirm-dialog {
+        text-align: center;
+      }
+      .confirm-dialog .icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+      .confirm-dialog p {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="brand">FrameOps</div>
+        <div class="tagline">Production Hub</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" data-page="overview">
+          <span class="icon">⬡</span> Dashboard
+        </div>
+
+        <div class="nav-section">Management</div>
+        <div class="nav-item" data-page="projects">
+          <span class="icon">🎬</span> Projects
+          <span class="badge" id="nav-badge-projects">—</span>
+        </div>
+        <div class="nav-item" data-page="sessions">
+          <span class="icon">📅</span> Sessions
+          <span class="badge" id="nav-badge-sessions">—</span>
+        </div>
+        <div class="nav-item" data-page="studios">
+          <span class="icon">🏛</span> Studios
+          <span class="badge" id="nav-badge-studios">—</span>
+        </div>
+
+        <div class="nav-section">Crew & Gear</div>
+        <div class="nav-item" data-page="professionals">
+          <span class="icon">👤</span> Professionals
+          <span class="badge" id="nav-badge-professionals">—</span>
+        </div>
+        <div class="nav-item" data-page="skills">
+          <span class="icon">⚡</span> Skills
+          <span class="badge" id="nav-badge-skills">—</span>
+        </div>
+        <div class="nav-item" data-page="equipments">
+          <span class="icon">📷</span> Equipment
+          <span class="badge" id="nav-badge-equipments">—</span>
+        </div>
+
+        <div class="nav-section">Relations</div>
+        <div class="nav-item" data-page="assign">
+          <span class="icon">🔗</span> Assign
+        </div>
+        <div class="nav-item" data-page="sessions-studios">
+          <span class="icon">🗂</span> Sessions + Studios
+        </div>
+        <div class="nav-item" data-page="sessions-projects">
+          <span class="icon">🗃</span> Sessions + Projects
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <div class="topbar-title" id="page-title">Dashboard</div>
+          <div class="topbar-sub" id="page-sub">Agency overview</div>
+        </div>
+        <div class="topbar-actions">
+          <div class="api-url-bar" style="margin-bottom: 0; min-width: 260px">
+            <label>API</label>
+            <input
+              type="text"
+              id="base-url-input"
+              placeholder="http://localhost:3000"
+              value="http://localhost:3000"
+            />
+          </div>
+        </div>
+      </header>
+
+      <!-- OVERVIEW PAGE -->
+      <div class="page active" id="page-overview">
+        <div class="stats-grid">
+          <div class="stat-card c1">
+            <div class="stat-label">Projects</div>
+            <div class="stat-value" id="ov-projects">—</div>
+          </div>
+          <div class="stat-card c2">
+            <div class="stat-label">Sessions</div>
+            <div class="stat-value" id="ov-sessions">—</div>
+          </div>
+          <div class="stat-card c3">
+            <div class="stat-label">Studios</div>
+            <div class="stat-value" id="ov-studios">—</div>
+          </div>
+          <div class="stat-card c4">
+            <div class="stat-label">Professionals</div>
+            <div class="stat-value" id="ov-professionals">—</div>
+          </div>
+          <div class="stat-card c5">
+            <div class="stat-label">Skills</div>
+            <div class="stat-value" id="ov-skills">—</div>
+          </div>
+          <div class="stat-card c6">
+            <div class="stat-label">Equipment</div>
+            <div class="stat-value" id="ov-equipments">—</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="section-header">
+              <div class="section-title">Recent Projects</div>
+            </div>
+            <div class="table-wrap" id="ov-projects-list">
+              <div class="loading-spinner"></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-header">
+              <div class="section-title">Upcoming Sessions</div>
+            </div>
+            <div class="table-wrap" id="ov-sessions-list">
+              <div class="loading-spinner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS PAGE -->
+      <div class="page" id="page-projects">
+        <p class="page-desc">
+          Manage all video production projects — set creative titles, budgets
+          and delivery deadlines.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search projects…"
+              oninput="filterTable('projects-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('projects')">
+            + New Project
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="projects-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Creative Title</th>
+                <th>Budget</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projects-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SESSIONS PAGE -->
+      <div class="page" id="page-sessions">
+        <p class="page-desc">
+          Schedule and manage production sessions — link them to studios and
+          projects.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search sessions…"
+              oninput="filterTable('sessions-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('sessions')">
+            + New Session
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="sessions-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Project ID</th>
+                <th>Studio ID</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDIOS PAGE -->
+      <div class="page" id="page-studios">
+        <p class="page-desc">
+          Manage agency studios — green-screen rooms, sound booths and more
+          across all wings.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search studios…"
+              oninput="filterTable('studios-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('studios')">
+            + New Studio
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="studios-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Studio Name</th>
+                <th>Wing</th>
+                <th>Availability</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studios-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROFESSIONALS PAGE -->
+      <div class="page" id="page-professionals">
+        <p class="page-desc">
+          Directors, cinematographers, editors and all creative crew members.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search professionals…"
+              oninput="filterTable('professionals-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('professionals')">
+            + New Professional
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="professionals-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Skill ID</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="professionals-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SKILLS PAGE -->
+      <div class="page" id="page-skills">
+        <p class="page-desc">
+          Technical skill categories used to classify professionals.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search skills…"
+              oninput="filterTable('skills-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('skills')">
+            + New Skill
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="skills-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Skill Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="skills-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EQUIPMENTS PAGE -->
+      <div class="page" id="page-equipments">
+        <p class="page-desc">
+          High-end cinema cameras, lighting kits and all production gear tracked
+          by serial number.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search equipment…"
+              oninput="filterTable('equipments-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="openModal('equipments')">
+            + New Equipment
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="equipments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Serial No.</th>
+                <th>Type</th>
+                <th>Condition</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="equipments-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ASSIGN PAGE -->
+      <div class="page" id="page-assign">
+        <p class="page-desc">
+          Assign professionals or equipment to production sessions.
+        </p>
+        <div class="assign-section">
+          <div class="assign-section-title">
+            👤 Assign Professional to Session
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field">
+                <label>Session ID</label
+                ><input
+                  type="number"
+                  id="assign-prof-session"
+                  placeholder="e.g. 1"
+                />
+              </div>
+              <div class="field">
+                <label>Professional ID</label
+                ><input
+                  type="number"
+                  id="assign-prof-id"
+                  placeholder="e.g. 3"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label>Contribution / Role Note</label
+              ><input
+                type="text"
+                id="assign-prof-contrib"
+                placeholder="e.g. Lead Camera"
+              />
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="assignProfessional()">
+                Assign Professional
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="assign-section">
+          <div class="assign-section-title">📷 Assign Equipment to Session</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field">
+                <label>Session ID</label
+                ><input
+                  type="number"
+                  id="assign-eq-session"
+                  placeholder="e.g. 1"
+                />
+              </div>
+              <div class="field">
+                <label>Equipment ID</label
+                ><input type="number" id="assign-eq-id" placeholder="e.g. 2" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Responsible Prof. ID</label
+                ><input
+                  type="number"
+                  id="assign-eq-prof"
+                  placeholder="e.g. 3"
+                />
+              </div>
+              <div class="field">
+                <label>Return Condition</label>
+                <select id="assign-eq-cond">
+                  <option value="">— select —</option>
+                  <option>Excellent</option>
+                  <option>Good</option>
+                  <option>Fair</option>
+                  <option>Damaged</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="assignEquipment()">
+                Assign Equipment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSIONS + STUDIOS PAGE -->
+      <div class="page" id="page-sessions-studios">
+        <p class="page-desc">
+          Sessions joined with their associated studio details.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search…"
+              oninput="filterTable('ss-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-ghost" onclick="loadSessionsStudios()">
+            ↻ Refresh
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="ss-table">
+            <thead>
+              <tr>
+                <th>Session ID</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Studio</th>
+                <th>Wing</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody id="ss-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SESSIONS + PROJECTS PAGE -->
+      <div class="page" id="page-sessions-projects">
+        <p class="page-desc">
+          Sessions joined with their linked project details and budget info.
+        </p>
+        <div class="section-header">
+          <div class="search-box">
+            <span>🔍</span
+            ><input
+              type="text"
+              placeholder="Search…"
+              oninput="filterTable('sp-table', this.value)"
+            />
+          </div>
+          <button class="btn btn-ghost" onclick="loadSessionsProjects()">
+            ↻ Refresh
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table id="sp-table">
+            <thead>
+              <tr>
+                <th>Session ID</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Project</th>
+                <th>Budget</th>
+                <th>Deadline</th>
+              </tr>
+            </thead>
+            <tbody id="sp-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL -->
+    <div
+      class="modal-overlay"
+      id="modal-overlay"
+      onclick="handleOverlayClick(event)"
+    >
+      <div class="modal" id="modal-box">
+        <div class="modal-header">
+          <div class="modal-title" id="modal-title">Title</div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modal-body"></div>
+        <div class="modal-footer" id="modal-footer"></div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+      // ── STATE ──────────────────────────────────────────────────────
+      let currentPage = "overview";
+      let editingId = null;
+      let editingEntity = null;
+      let data = {
+        projects: [],
+        sessions: [],
+        studios: [],
+        professionals: [],
+        skills: [],
+        equipments: [],
+      };
+
+      const titles = {
+        overview: ["Dashboard", "Agency overview"],
+        projects: ["Projects", "All video production projects"],
+        sessions: ["Sessions", "Scheduled production sessions"],
+        studios: ["Studios", "Agency studio spaces"],
+        professionals: ["Professionals", "Creative crew members"],
+        skills: ["Skills", "Technical skill categories"],
+        equipments: ["Equipment", "Gear inventory"],
+        assign: ["Assign", "Link crew & gear to sessions"],
+        "sessions-studios": [
+          "Sessions + Studios",
+          "Joined session & studio view",
+        ],
+        "sessions-projects": [
+          "Sessions + Projects",
+          "Joined session & project view",
+        ],
+      };
+
+      function getBase() {
+        return document
+          .getElementById("base-url-input")
+          .value.replace(/\/$/, "");
+      }
+
+      // ── API ────────────────────────────────────────────────────────
+      async function api(method, path, body) {
+        try {
+          const opts = {
+            method,
+            headers: { "Content-Type": "application/json" },
+          };
+          if (body) opts.body = JSON.stringify(body);
+          const r = await fetch(getBase() + path, opts);
+          const json = await r.json();
+          if (!r.ok) throw new Error(json.message || r.statusText);
+          return json;
+        } catch (e) {
+          toast("error", e.message || "Request failed");
+          throw e;
+        }
+      }
+
+      // ── TOAST ─────────────────────────────────────────────────────
+      function toast(type, msg) {
+        const el = document.createElement("div");
+        el.className = `toast ${type}`;
+        el.innerHTML = `<span class="toast-icon">${type === "success" ? "✓" : "✕"}</span><span>${msg}</span>`;
+        document.getElementById("toast-container").appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+      }
+
+      // ── NAV ────────────────────────────────────────────────────────
+      document.querySelectorAll(".nav-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          const page = el.dataset.page;
+          navigate(page);
+        });
+      });
+
+      function navigate(page) {
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document
+          .querySelector(`.nav-item[data-page="${page}"]`)
+          ?.classList.add("active");
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById(`page-${page}`)?.classList.add("active");
+        const [t, s] = titles[page] || [page, ""];
+        document.getElementById("page-title").textContent = t;
+        document.getElementById("page-sub").textContent = s;
+        currentPage = page;
+
+        const loaders = {
+          overview: loadOverview,
+          projects: () => loadEntity("projects"),
+          sessions: () => loadEntity("sessions"),
+          studios: () => loadEntity("studios"),
+          professionals: () => loadEntity("professionals"),
+          skills: () => loadEntity("skills"),
+          equipments: () => loadEntity("equipments"),
+          "sessions-studios": loadSessionsStudios,
+          "sessions-projects": loadSessionsProjects,
+        };
+        loaders[page]?.();
+      }
+
+      // ── OVERVIEW ────────────────────────────────────────────────────
+      async function loadOverview() {
+        const entities = [
+          "projects",
+          "sessions",
+          "studios",
+          "professionals",
+          "skills",
+          "equipments",
+        ];
+        for (const e of entities) {
+          try {
+            const res = await api("GET", `/${e}`);
+            const list = Array.isArray(res) ? res : res.result || [];
+            data[e] = list;
+            document.getElementById(`ov-${e}`).textContent = list.length;
+            document.getElementById(`nav-badge-${e}`).textContent = list.length;
+          } catch {}
+        }
+        // recent projects
+        const projHtml =
+          data.projects
+            .slice(0, 5)
+            .map(
+              (p) => `
+    <div class="mini-list-item">
+      <div><div class="name">${p.Creative_title || "—"}</div><div class="meta">Budget: $${Number(p.budget || 0).toLocaleString()}</div></div>
+      <span class="pill pill-accent">${p.deadline ? new Date(p.deadline).toLocaleDateString() : "—"}</span>
+    </div>`,
+            )
+            .join("") ||
+          '<div class="empty-state"><div class="em-icon">📂</div>No projects yet</div>';
+        document.getElementById("ov-projects-list").innerHTML = projHtml;
+
+        const sessHtml =
+          data.sessions
+            .slice(0, 5)
+            .map(
+              (s) => `
+    <div class="mini-list-item">
+      <div><div class="name">Session #${s.Session_ID}</div><div class="meta">${s.Session_date ? new Date(s.Session_date).toLocaleDateString() : "—"}</div></div>
+      <span class="pill pill-blue">${s.Session_start_time || "—"} – ${s.Session_end_time || "—"}</span>
+    </div>`,
+            )
+            .join("") ||
+          '<div class="empty-state"><div class="em-icon">📅</div>No sessions yet</div>';
+        document.getElementById("ov-sessions-list").innerHTML = sessHtml;
+      }
+
+      // ── GENERIC ENTITY LOADER ──────────────────────────────────────
+      const entityConfig = {
+        projects: {
+          path: "/projects",
+          idKey: "Project_ID",
+          render: (
+            r,
+          ) => `<td><span class="id-badge">#${r.Project_ID}</span></td>
+      <td>${r.Creative_title || "—"}</td>
+      <td>$${Number(r.budget || 0).toLocaleString()}</td>
+      <td>${r.deadline ? new Date(r.deadline).toLocaleDateString() : "—"}</td>`,
+        },
+        sessions: {
+          path: "/sessions",
+          idKey: "Session_ID",
+          render: (
+            r,
+          ) => `<td><span class="id-badge">#${r.Session_ID}</span></td>
+      <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
+      <td>${r.Session_start_time || "—"}</td>
+      <td>${r.Session_end_time || "—"}</td>
+      <td><span class="pill pill-accent">${r.Project_ID || "—"}</span></td>
+      <td><span class="pill pill-blue">${r.Studio_ID || "—"}</span></td>`,
+        },
+        studios: {
+          path: "/studios",
+          idKey: "Studio_ID",
+          render: (r) => `<td><span class="id-badge">#${r.Studio_ID}</span></td>
+      <td>${r.Studio_name || "—"}</td>
+      <td>${r.wing || "—"}</td>
+      <td><span class="pill ${r.availability_status === "Available" || r.availability_status === 1 ? "pill-green" : "pill-red"}">${r.availability_status || "—"}</span></td>`,
+        },
+        professionals: {
+          path: "/professionals",
+          idKey: "prof_ID",
+          render: (r) => `<td><span class="id-badge">#${r.prof_ID}</span></td>
+      <td>${r.fname || ""} ${r.lname || ""}</td>
+      <td><span class="pill pill-purple">${r.role_title || "—"}</span></td>
+      <td>${r.email || "—"}</td>
+      <td>${r.phone || "—"}</td>
+      <td>${r.SkillID || "—"}</td>`,
+        },
+        skills: {
+          path: "/skills",
+          idKey: "SkillID",
+          render: (r) => `<td><span class="id-badge">#${r.SkillID}</span></td>
+      <td>${r.Skillname || "—"}</td>`,
+        },
+        equipments: {
+          path: "/equipments",
+          idKey: "Eq_ID",
+          render: (r) => `<td><span class="id-badge">#${r.Eq_ID}</span></td>
+      <td>${r.Eq_name || "—"}</td>
+      <td><code style="font-size:11px;color:var(--accent3)">${r.Serial_no || "—"}</code></td>
+      <td>${r.Eq_Type || "—"}</td>
+      <td><span class="pill ${condPill(r.Condition_status)}">${r.Condition_status || "—"}</span></td>`,
+        },
+      };
+
+      function condPill(c) {
+        if (!c) return "";
+        const m = {
+          Excellent: "pill-green",
+          Good: "pill-green",
+          Fair: "pill-yellow",
+          Damaged: "pill-red",
+        };
+        return m[c] || "pill-blue";
+      }
+
+      async function loadEntity(entity) {
+        const cfg = entityConfig[entity];
+        const tbody = document.getElementById(`${entity}-tbody`);
+        tbody.innerHTML = `<tr><td colspan="10"><div class="loading-spinner"></div></td></tr>`;
+        try {
+          const res = await api("GET", cfg.path);
+          const list = Array.isArray(res) ? res : res.result || [];
+          data[entity] = list;
+          document.getElementById(`nav-badge-${entity}`).textContent =
+            list.length;
+          renderTable(entity, list);
+        } catch {
+          tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state">Failed to load</div></td></tr>`;
+        }
+      }
+
+      function renderTable(entity, list) {
+        const cfg = entityConfig[entity];
+        const tbody = document.getElementById(`${entity}-tbody`);
+        if (!list.length) {
+          tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="em-icon">📭</div>No records found</div></td></tr>`;
+          return;
+        }
+        tbody.innerHTML = list
+          .map(
+            (r) => `<tr>
+    ${cfg.render(r)}
+    <td><div class="row-actions">
+      <button class="btn btn-ghost btn-sm" onclick='openEdit("${entity}", ${JSON.stringify(r)})'>Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDelete('${entity}', ${r[cfg.idKey]})">Delete</button>
+    </div></td>
+  </tr>`,
+          )
+          .join("");
+      }
+
+      // ── FILTER ────────────────────────────────────────────────────
+      function filterTable(tableId, q) {
+        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        rows.forEach((r) => {
+          r.style.display = r.textContent
+            .toLowerCase()
+            .includes(q.toLowerCase())
+            ? ""
+            : "none";
+        });
+      }
+
+      // ── MODAL ─────────────────────────────────────────────────────
+      const modalForms = {
+        projects: (d) => `<div class="form-grid">
+    <div class="field"><label>Creative Title</label><input id="f-title" value="${d?.Creative_title || ""}" placeholder="e.g. Neon Dreams Campaign" /></div>
+    <div class="form-row">
+      <div class="field"><label>Budget ($)</label><input id="f-budget" type="number" value="${d?.budget || ""}" placeholder="50000" /></div>
+      <div class="field"><label>Deadline</label><input id="f-deadline" type="date" value="${d?.deadline ? d.deadline.split("T")[0] : ""}" /></div>
+    </div>
+  </div>`,
+        sessions: (d) => `<div class="form-grid">
+    <div class="field"><label>Session Date</label><input id="f-date" type="date" value="${d?.Session_date ? d.Session_date.split("T")[0] : ""}" /></div>
+    <div class="form-row">
+      <div class="field"><label>Start Time</label><input id="f-start" type="time" value="${d?.Session_start_time || ""}" /></div>
+      <div class="field"><label>End Time</label><input id="f-end" type="time" value="${d?.Session_end_time || ""}" /></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Project ID</label><input id="f-projid" type="number" value="${d?.Project_ID || ""}" placeholder="e.g. 1" /></div>
+      <div class="field"><label>Studio ID</label><input id="f-studioid" type="number" value="${d?.Studio_ID || ""}" placeholder="e.g. 2" /></div>
+    </div>
+  </div>`,
+        studios: (d) => `<div class="form-grid">
+    <div class="field"><label>Studio Name</label><input id="f-sname" value="${d?.Studio_name || ""}" placeholder="e.g. Green-Screen Room A" /></div>
+    <div class="field"><label>Wing</label><input id="f-wing" value="${d?.wing || ""}" placeholder="e.g. East Wing" /></div>
+    <div class="field"><label>Availability</label>
+      <select id="f-avail">
+        <option value="Available" ${d?.availability_status === "Available" ? "selected" : ""}>Available</option>
+        <option value="Occupied" ${d?.availability_status === "Occupied" ? "selected" : ""}>Occupied</option>
+        <option value="Maintenance" ${d?.availability_status === "Maintenance" ? "selected" : ""}>Maintenance</option>
+      </select>
+    </div>
+  </div>`,
+        professionals: (d) => `<div class="form-grid">
+    <div class="form-row">
+      <div class="field"><label>First Name</label><input id="f-fname" value="${d?.fname || ""}" /></div>
+      <div class="field"><label>Last Name</label><input id="f-lname" value="${d?.lname || ""}" /></div>
+    </div>
+    <div class="field"><label>Role Title</label><input id="f-role" value="${d?.role_title || ""}" placeholder="e.g. Director" /></div>
+    <div class="form-row">
+      <div class="field"><label>Email</label><input id="f-email" type="email" value="${d?.email || ""}" /></div>
+      <div class="field"><label>Phone</label><input id="f-phone" value="${d?.phone || ""}" /></div>
+    </div>
+    <div class="field"><label>Skill ID</label><input id="f-skillid" type="number" value="${d?.SkillID || ""}" placeholder="e.g. 1" /></div>
+  </div>`,
+        skills: (d) => `<div class="form-grid">
+    <div class="field"><label>Skill Name</label><input id="f-skillname" value="${d?.Skillname || ""}" placeholder="e.g. Cinematography" /></div>
+  </div>`,
+        equipments: (d) => `<div class="form-grid">
+    <div class="field"><label>Equipment Name</label><input id="f-eqname" value="${d?.Eq_name || ""}" placeholder="e.g. RED Komodo 6K" /></div>
+    <div class="field"><label>Serial Number</label><input id="f-serial" value="${d?.Serial_no || ""}" placeholder="e.g. SN-20241105-001" /></div>
+    <div class="form-row">
+      <div class="field"><label>Type</label>
+        <select id="f-eqtype">
+          <option value="">— select —</option>
+          <option ${d?.Eq_Type === "Camera" ? "selected" : ""}>Camera</option>
+          <option ${d?.Eq_Type === "Lighting" ? "selected" : ""}>Lighting</option>
+          <option ${d?.Eq_Type === "Audio" ? "selected" : ""}>Audio</option>
+          <option ${d?.Eq_Type === "Grip" ? "selected" : ""}>Grip</option>
+          <option ${d?.Eq_Type === "Other" ? "selected" : ""}>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Condition</label>
+        <select id="f-cond">
+          <option value="">— select —</option>
+          <option ${d?.Condition_status === "Excellent" ? "selected" : ""}>Excellent</option>
+          <option ${d?.Condition_status === "Good" ? "selected" : ""}>Good</option>
+          <option ${d?.Condition_status === "Fair" ? "selected" : ""}>Fair</option>
+          <option ${d?.Condition_status === "Damaged" ? "selected" : ""}>Damaged</option>
+        </select>
+      </div>
+    </div>
+  </div>`,
+      };
+
+      const formGetters = {
+        projects: () => ({
+          Creative_title: v("f-title"),
+          budget: v("f-budget"),
+          deadline: v("f-deadline"),
+        }),
+        sessions: () => ({
+          Session_date: v("f-date"),
+          Session_start_time: v("f-start"),
+          Session_end_time: v("f-end"),
+          Project_ID: v("f-projid"),
+          Studio_ID: v("f-studioid"),
+        }),
+        studios: () => ({
+          Studio_name: v("f-sname"),
+          wing: v("f-wing"),
+          availability_status: v("f-avail"),
+        }),
+        professionals: () => ({
+          fname: v("f-fname"),
+          lname: v("f-lname"),
+          role_title: v("f-role"),
+          email: v("f-email"),
+          phone: v("f-phone"),
+          SkillID: v("f-skillid"),
+        }),
+        skills: () => ({ Skillname: v("f-skillname") }),
+        equipments: () => ({
+          Eq_name: v("f-eqname"),
+          Serial_no: v("f-serial"),
+          Eq_Type: v("f-eqtype"),
+          Condition_status: v("f-cond"),
+        }),
+      };
+
+      function v(id) {
+        return document.getElementById(id)?.value || "";
+      }
+
+      function openModal(entity) {
+        editingId = null;
+        editingEntity = entity;
+        document.getElementById("modal-title").textContent =
+          `New ${entity.slice(0, -1).replace(/^./, (c) => c.toUpperCase())}`;
+        document.getElementById("modal-body").innerHTML =
+          modalForms[entity](null);
+        document.getElementById("modal-footer").innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveEntity()">Create</button>`;
+        document.getElementById("modal-overlay").classList.add("open");
+      }
+
+      function openEdit(entity, record) {
+        const cfg = entityConfig[entity];
+        editingId = record[cfg.idKey];
+        editingEntity = entity;
+        document.getElementById("modal-title").textContent =
+          `Edit ${entity.slice(0, -1).replace(/^./, (c) => c.toUpperCase())}`;
+        document.getElementById("modal-body").innerHTML =
+          modalForms[entity](record);
+        document.getElementById("modal-footer").innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveEntity()">Save Changes</button>`;
+        document.getElementById("modal-overlay").classList.add("open");
+      }
+
+      function closeModal() {
+        document.getElementById("modal-overlay").classList.remove("open");
+        editingId = null;
+      }
+
+      function handleOverlayClick(e) {
+        if (e.target === document.getElementById("modal-overlay")) closeModal();
+      }
+
+      async function saveEntity() {
+        const entity = editingEntity;
+        const cfg = entityConfig[entity];
+        const body = formGetters[entity]();
+        try {
+          if (editingId) {
+            await api("PATCH", `${cfg.path}/${editingId}`, body);
+            toast("success", "Record updated successfully");
+          } else {
+            await api("POST", cfg.path, body);
+            toast("success", "Record created successfully");
+          }
+          closeModal();
+          loadEntity(entity);
+        } catch {}
+      }
+
+      function confirmDelete(entity, id) {
+        editingId = id;
+        editingEntity = entity;
+        document.getElementById("modal-title").textContent = "Confirm Delete";
+        document.getElementById("modal-body").innerHTML = `
+    <div class="confirm-dialog">
+      <div class="icon">🗑</div>
+      <p>This action is permanent and cannot be undone.<br/>Are you sure you want to delete record <strong>#${id}</strong>?</p>
+    </div>`;
+        document.getElementById("modal-footer").innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-danger" onclick="doDelete()">Delete</button>`;
+        document.getElementById("modal-overlay").classList.add("open");
+      }
+
+      async function doDelete() {
+        const cfg = entityConfig[editingEntity];
+        try {
+          await api("DELETE", `${cfg.path}/${editingId}`);
+          toast("success", "Record deleted");
+          closeModal();
+          loadEntity(editingEntity);
+        } catch {}
+      }
+
+      // ── ASSIGN ────────────────────────────────────────────────────
+      async function assignProfessional() {
+        const body = {
+          Session_ID: document.getElementById("assign-prof-session").value,
+          prof_ID: document.getElementById("assign-prof-id").value,
+          contribution_val: document.getElementById("assign-prof-contrib")
+            .value,
+        };
+        try {
+          await api("POST", "/sessions/assign-professional", body);
+          toast("success", "Professional assigned successfully!");
+        } catch {}
+      }
+
+      async function assignEquipment() {
+        const body = {
+          Session_ID: document.getElementById("assign-eq-session").value,
+          Eq_ID: document.getElementById("assign-eq-id").value,
+          prof_ID: document.getElementById("assign-eq-prof").value,
+          return_cond: document.getElementById("assign-eq-cond").value,
+        };
+        try {
+          await api("POST", "/sessions/assign-equipment", body);
+          toast("success", "Equipment assigned successfully!");
+        } catch {}
+      }
+
+      // ── JOINED VIEWS ──────────────────────────────────────────────
+      async function loadSessionsStudios() {
+        const tbody = document.getElementById("ss-tbody");
+        tbody.innerHTML = `<tr><td colspan="10"><div class="loading-spinner"></div></td></tr>`;
+        try {
+          const res = await api("GET", "/sessions/with-studios");
+          const list = Array.isArray(res) ? res : res.result || [];
+          if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="em-icon">📭</div>No data</div></td></tr>`;
+            return;
+          }
+          tbody.innerHTML = list
+            .map(
+              (r) => `<tr>
+      <td><span class="id-badge">#${r.Session_ID}</span></td>
+      <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
+      <td>${r.Session_start_time || "—"}</td>
+      <td>${r.Session_end_time || "—"}</td>
+      <td>${r.Studio_name || "—"}</td>
+      <td>${r.wing || "—"}</td>
+      <td><span class="pill ${r.availability_status === "Available" ? "pill-green" : "pill-yellow"}">${r.availability_status || "—"}</span></td>
+    </tr>`,
+            )
+            .join("");
+        } catch {
+          tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state">Failed to load</div></td></tr>`;
+        }
+      }
+
+      async function loadSessionsProjects() {
+        const tbody = document.getElementById("sp-tbody");
+        tbody.innerHTML = `<tr><td colspan="10"><div class="loading-spinner"></div></td></tr>`;
+        try {
+          const res = await api("GET", "/sessions/with-projects");
+          const list = Array.isArray(res) ? res : res.result || [];
+          if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="em-icon">📭</div>No data</div></td></tr>`;
+            return;
+          }
+          tbody.innerHTML = list
+            .map(
+              (r) => `<tr>
+      <td><span class="id-badge">#${r.Session_ID}</span></td>
+      <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
+      <td>${r.Session_start_time || "—"}</td>
+      <td>${r.Session_end_time || "—"}</td>
+      <td>${r.Creative_title || "—"}</td>
+      <td>$${Number(r.budget || 0).toLocaleString()}</td>
+      <td>${r.deadline ? new Date(r.deadline).toLocaleDateString() : "—"}</td>
+    </tr>`,
+            )
+            .join("");
+        } catch {
+          tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state">Failed to load</div></td></tr>`;
+        }
+      }
+
+      // ── INIT ──────────────────────────────────────────────────────
+      loadOverview();
+    </script>
+  </body>
+</html>
