@@ -27,8 +27,8 @@ export function connectDB() {
 export function queryAsync(sql, params = []) {
   return new Promise(async (resolve, reject) => {
     try {
-      const conn = await connectDB();
-      conn.query(sql, params, (err, rows) => {
+
+      dbConnection.query(sql, params, (err, rows) => {
         if (err) return reject(err);
         resolve(rows);
       });

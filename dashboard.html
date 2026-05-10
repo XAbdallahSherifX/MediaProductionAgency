@@ -1038,17 +1038,17 @@
               <div class="field">
                 <label>Session ID</label
                 ><input
-                  type="number"
+                  type="text"
                   id="assign-prof-session"
-                  placeholder="e.g. 1"
+                  placeholder="Session UUID"
                 />
               </div>
               <div class="field">
                 <label>Professional ID</label
                 ><input
-                  type="number"
+                  type="text"
                   id="assign-prof-id"
-                  placeholder="e.g. 3"
+                  placeholder="Professional UUID"
                 />
               </div>
             </div>
@@ -1074,23 +1074,23 @@
               <div class="field">
                 <label>Session ID</label
                 ><input
-                  type="number"
+                  type="text"
                   id="assign-eq-session"
-                  placeholder="e.g. 1"
+                  placeholder="Session UUID"
                 />
               </div>
               <div class="field">
                 <label>Equipment ID</label
-                ><input type="number" id="assign-eq-id" placeholder="e.g. 2" />
+                ><input type="text" id="assign-eq-id" placeholder="Equipment UUID" />
               </div>
             </div>
             <div class="form-row">
               <div class="field">
                 <label>Responsible Prof. ID</label
                 ><input
-                  type="number"
+                  type="text"
                   id="assign-eq-prof"
-                  placeholder="e.g. 3"
+                  placeholder="Professional UUID"
                 />
               </div>
               <div class="field">
@@ -1349,8 +1349,8 @@
             .map(
               (s) => `
     <div class="mini-list-item">
-      <div><div class="name">Session #${s.Session_ID}</div><div class="meta">${s.Session_date ? new Date(s.Session_date).toLocaleDateString() : "—"}</div></div>
-      <span class="pill pill-blue">${s.Session_start_time || "—"} – ${s.Session_end_time || "—"}</span>
+      <div><div class="name">Session <span title="${s.Session_ID}">#${shortId(s.Session_ID)}</span></div><div class="meta">${s.Session_date ? new Date(s.Session_date).toLocaleDateString() : "—"}</div></div>
+      <span class="pill pill-blue">${formatTime(s.Session_start_time)} – ${formatTime(s.Session_end_time)}</span>
     </div>`,
             )
             .join("") ||
@@ -1363,9 +1363,7 @@
         projects: {
           path: "/projects",
           idKey: "Project_ID",
-          render: (
-            r,
-          ) => `<td><span class="id-badge">#${r.Project_ID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.Project_ID}">${shortId(r.Project_ID)}</span></td>
       <td>${r.Creative_title || "—"}</td>
       <td>$${Number(r.budget || 0).toLocaleString()}</td>
       <td>${r.deadline ? new Date(r.deadline).toLocaleDateString() : "—"}</td>`,
@@ -1373,19 +1371,17 @@
         sessions: {
           path: "/sessions",
           idKey: "Session_ID",
-          render: (
-            r,
-          ) => `<td><span class="id-badge">#${r.Session_ID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.Session_ID}">${shortId(r.Session_ID)}</span></td>
       <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
-      <td>${r.Session_start_time || "—"}</td>
-      <td>${r.Session_end_time || "—"}</td>
-      <td><span class="pill pill-accent">${r.Project_ID || "—"}</span></td>
-      <td><span class="pill pill-blue">${r.Studio_ID || "—"}</span></td>`,
+      <td>${formatTime(r.Session_start_time)}</td>
+      <td>${formatTime(r.Session_end_time)}</td>
+      <td><span class="pill pill-accent" title="${r.Project_ID || ''}">${shortId(r.Project_ID)}</span></td>
+      <td><span class="pill pill-blue" title="${r.Studio_ID || ''}">${shortId(r.Studio_ID)}</span></td>`,
         },
         studios: {
           path: "/studios",
           idKey: "Studio_ID",
-          render: (r) => `<td><span class="id-badge">#${r.Studio_ID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.Studio_ID}">${shortId(r.Studio_ID)}</span></td>
       <td>${r.Studio_name || "—"}</td>
       <td>${r.wing || "—"}</td>
       <td><span class="pill ${r.availability_status === "Available" || r.availability_status === 1 ? "pill-green" : "pill-red"}">${r.availability_status || "—"}</span></td>`,
@@ -1393,29 +1389,48 @@
         professionals: {
           path: "/professionals",
           idKey: "prof_ID",
-          render: (r) => `<td><span class="id-badge">#${r.prof_ID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.prof_ID}">${shortId(r.prof_ID)}</span></td>
       <td>${r.fname || ""} ${r.lname || ""}</td>
       <td><span class="pill pill-purple">${r.role_title || "—"}</span></td>
       <td>${r.email || "—"}</td>
       <td>${r.phone || "—"}</td>
-      <td>${r.SkillID || "—"}</td>`,
+      <td><span class="id-badge" title="${r.SkillID || ''}">${shortId(r.SkillID)}</span></td>`,
         },
         skills: {
           path: "/skills",
           idKey: "SkillID",
-          render: (r) => `<td><span class="id-badge">#${r.SkillID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.SkillID}">${shortId(r.SkillID)}</span></td>
       <td>${r.Skillname || "—"}</td>`,
         },
         equipments: {
           path: "/equipments",
           idKey: "Eq_ID",
-          render: (r) => `<td><span class="id-badge">#${r.Eq_ID}</span></td>
+          render: (r) => `<td><span class="id-badge" title="${r.Eq_ID}">${shortId(r.Eq_ID)}</span></td>
       <td>${r.Eq_name || "—"}</td>
       <td><code style="font-size:11px;color:var(--accent3)">${r.Serial_no || "—"}</code></td>
       <td>${r.Eq_Type || "—"}</td>
       <td><span class="pill ${condPill(r.Condition_status)}">${r.Condition_status || "—"}</span></td>`,
         },
       };
+
+      // ── UUID HELPERS ───────────────────────────────────────────────
+      function shortId(uuid) {
+        if (!uuid) return '—';
+        const s = String(uuid);
+        return s.length > 8 ? s.slice(0, 8) + '…' : s;
+      }
+
+      function formatTime(t) {
+        if (!t) return '—';
+        if (typeof t === 'object' && t !== null) {
+          // Some DB drivers return time as {hours, minutes, seconds}
+          const h = String(t.hours || 0).padStart(2, '0');
+          const m = String(t.minutes || 0).padStart(2, '0');
+          return `${h}:${m}`;
+        }
+        // String like "HH:MM:SS" — drop seconds
+        return String(t).slice(0, 5);
+      }
 
       function condPill(c) {
         if (!c) return "";
@@ -1457,7 +1472,7 @@
     ${cfg.render(r)}
     <td><div class="row-actions">
       <button class="btn btn-ghost btn-sm" onclick='openEdit("${entity}", ${JSON.stringify(r)})'>Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="confirmDelete('${entity}', ${r[cfg.idKey]})">Delete</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDelete('${entity}', '${r[cfg.idKey]}')">Delete</button>
     </div></td>
   </tr>`,
           )
@@ -1492,8 +1507,8 @@
       <div class="field"><label>End Time</label><input id="f-end" type="time" value="${d?.Session_end_time || ""}" /></div>
     </div>
     <div class="form-row">
-      <div class="field"><label>Project ID</label><input id="f-projid" type="number" value="${d?.Project_ID || ""}" placeholder="e.g. 1" /></div>
-      <div class="field"><label>Studio ID</label><input id="f-studioid" type="number" value="${d?.Studio_ID || ""}" placeholder="e.g. 2" /></div>
+      <div class="field"><label>Project ID</label><input id="f-projid" type="text" value="${d?.Project_ID || ""}" placeholder="UUID e.g. 3f2a1b…" /></div>
+      <div class="field"><label>Studio ID</label><input id="f-studioid" type="text" value="${d?.Studio_ID || ""}" placeholder="UUID e.g. 7c4d9e…" /></div>
     </div>
   </div>`,
         studios: (d) => `<div class="form-grid">
@@ -1517,7 +1532,7 @@
       <div class="field"><label>Email</label><input id="f-email" type="email" value="${d?.email || ""}" /></div>
       <div class="field"><label>Phone</label><input id="f-phone" value="${d?.phone || ""}" /></div>
     </div>
-    <div class="field"><label>Skill ID</label><input id="f-skillid" type="number" value="${d?.SkillID || ""}" placeholder="e.g. 1" /></div>
+    <div class="field"><label>Skill ID</label><input id="f-skillid" type="text" value="${d?.SkillID || ""}" placeholder="UUID e.g. 5a8b2c…" /></div>
   </div>`,
         skills: (d) => `<div class="form-grid">
     <div class="field"><label>Skill Name</label><input id="f-skillname" value="${d?.Skillname || ""}" placeholder="e.g. Cinematography" /></div>
@@ -1648,7 +1663,7 @@
         document.getElementById("modal-body").innerHTML = `
     <div class="confirm-dialog">
       <div class="icon">🗑</div>
-      <p>This action is permanent and cannot be undone.<br/>Are you sure you want to delete record <strong>#${id}</strong>?</p>
+      <p>This action is permanent and cannot be undone.<br/>Are you sure you want to delete record <strong title="${id}">#${shortId(id)}</strong>?</p>
     </div>`;
         document.getElementById("modal-footer").innerHTML = `
     <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
@@ -1707,10 +1722,10 @@
           tbody.innerHTML = list
             .map(
               (r) => `<tr>
-      <td><span class="id-badge">#${r.Session_ID}</span></td>
+      <td><span class="id-badge" title="${r.Session_ID}">${shortId(r.Session_ID)}</span></td>
       <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
-      <td>${r.Session_start_time || "—"}</td>
-      <td>${r.Session_end_time || "—"}</td>
+      <td>${formatTime(r.Session_start_time)}</td>
+      <td>${formatTime(r.Session_end_time)}</td>
       <td>${r.Studio_name || "—"}</td>
       <td>${r.wing || "—"}</td>
       <td><span class="pill ${r.availability_status === "Available" ? "pill-green" : "pill-yellow"}">${r.availability_status || "—"}</span></td>
@@ -1735,10 +1750,10 @@
           tbody.innerHTML = list
             .map(
               (r) => `<tr>
-      <td><span class="id-badge">#${r.Session_ID}</span></td>
+      <td><span class="id-badge" title="${r.Session_ID}">${shortId(r.Session_ID)}</span></td>
       <td>${r.Session_date ? new Date(r.Session_date).toLocaleDateString() : "—"}</td>
-      <td>${r.Session_start_time || "—"}</td>
-      <td>${r.Session_end_time || "—"}</td>
+      <td>${formatTime(r.Session_start_time)}</td>
+      <td>${formatTime(r.Session_end_time)}</td>
       <td>${r.Creative_title || "—"}</td>
       <td>$${Number(r.budget || 0).toLocaleString()}</td>
       <td>${r.deadline ? new Date(r.deadline).toLocaleDateString() : "—"}</td>
