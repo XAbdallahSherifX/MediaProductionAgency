@@ -251,7 +251,7 @@ WHERE s.Project_ID = 'your-project-id';
 
 ---
 
-## Author
+## Authors
 **Omar Mustafa**
 <br/>
 Computer Science Student — Cairo University
